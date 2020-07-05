@@ -1,6 +1,6 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import moment from 'moment'
-import fromBase64 from './utils'
+import { fromBase64 } from '../../utils'
 
 const doc = new GoogleSpreadsheet(process.env.SHEET_DOC_ID)
 
@@ -10,7 +10,7 @@ const genCupom = () => {
 }
 
 export default async(req, res) => {
-    console.log(fromBase64(process.env.SHEET_PRIVATE_KEY))
+    
     try {
         await doc.useServiceAccountAuth({
             client_email: process.env.SHEET_CLIENT_EMAIL,
