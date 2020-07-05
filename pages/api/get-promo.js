@@ -1,5 +1,5 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet'
-import { fromBase64 } from '../../utils'
+import { fromBase64 } from '../../utils/fromBase64'
 
 const doc = new GoogleSpreadsheet(process.env.SHEET_DOC_ID)
 
