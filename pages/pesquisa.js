@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PageTitle from '../components/PageTitle'
+import { Validation } from '../utils/validation'
 
 const Pesquisa = () => {
 
@@ -8,7 +9,7 @@ const Pesquisa = () => {
         Email: '',
         Whatsapp: '',
         Sugestao: '',
-        Nota: 5
+        Nota: 0
     })
 
     const notas = [1, 2, 3, 4, 5]
@@ -17,6 +18,8 @@ const Pesquisa = () => {
         const value = event.target.value
         const key = event.target.name
 
+        //VALIDAÇÃO INDIVIDUAL
+      
         setForm(old => ({
             ...old,
             [key]: value
@@ -25,113 +28,164 @@ const Pesquisa = () => {
 
     const [ sucess, setSucess ] = useState(false)
     const [ retorno, setRetorno ] = useState({})
+    const [valid, setValid] = useState({
+        status: true,
+        menssage: [0]
+    })
 
     const save = async() => {
 
-        try {
-            const response = await fetch('/api/save', {
-                method: 'POST',
-                body: JSON.stringify(form)
-            })
+        //VALIDAÇÃO DOS DADOS
+        const val = Validation(form)
+        setValid({
+            status: val.status,
+            menssage: val.menssage
+        })
+        
+        if(val.status){
+            try {
+                const response = await fetch('/api/save', {
+                    method: 'POST',
+                    body: JSON.stringify(form)
+                })
 
-            const data = await response.json()
-            setSucess(true)
-            setRetorno(data)
-        }catch ( err ) {
-            console.log( 'METHOD SAVE ERROR: ', err )
+                const data = await response.json()
+                setSucess(true)
+                setRetorno(data)
+            }catch ( err ) {
+                console.log( 'METHOD SAVE ERROR: ', err )
+            }
         }
     }
     
     return (
-        <div className='container mx-auto mb-16'>
-            <PageTitle title='Pesquisa' />
-            <div className='text-center font-bold mt-12'>
-                <h1 className='text-2xl'>Críticas e sugestões</h1>
-                <p className='m-6'>O restaurante X sempre busca atender melhor seus clientes.<br />
-                Por isso, estamos sempre abertos a ouvir a sua opinião.</p>
-            </div>
+        <React.Fragment>
+            {/* BLOCO INSPIRADO EM MERTJF */}
+            <div className='text-gray-700 body-font relative'>
+                <PageTitle title='Teste' />
+                <div className='container px-5 py-4 mx-auto'>
+                    {/** BLOCO DE SAUDAÇÃO */}
+                    <div className='flex flex-col text-center w-full mb-12'>
+                        <h1 className='sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900'>
+                            <font style={{  verticalAlign: 'inherit' }}>
+                                <font style={{  verticalAlign: 'inherit' }}>Críticas e sugestões</font>
+                            </font>
+                        </h1>
+                        <p className='lg:w-2/3 mx-auto leading-relaxed text-base'>
+                            <font style={{  verticalAlign: 'inherit' }}>
+                                <font style={{  verticalAlign: 'inherit' }}>
+                                    <p>O restaurante X sempre busca atender melhor seus clientes.</p>
+                                    <p>Por isso, estamos sempre abertos a ouvir a sua opinião.</p>
+                                </font>
+                            </font>
+                        </p>
+                    </div>
+                    {/** BLOCO DE SAUDAÇÃO */}
 
-            { !sucess && <div>
-                <div className='w-1/4 mx-auto'>
-                    <label className='font-bold'>Seu nome:</label>
-                    <input type='text' 
-                        onChange={onChange}
-                        name='Nome'
-                        placeholder='Nome'
-                        className='p-4 block shadow-lg bg-blue-100 my-2 w-full rounded' />
+                    {/** BLOCO DE FORMULÁRIO */
+                    !sucess &&
+                    <div className='lg:w-1/2 md:w-2/3 mx-auto'>
+                        <div className='flex -m-2'>
+                            <div className='p-2 w-5/6 xl:w-3/4 lg:w-2/3 md:w-3/5 mx-auto'>
+                                <label className='font-bold'>Nome:</label>
+                                <input 
+                                    type='text' 
+                                    placeholder='Nome' 
+                                    name='Nome'
+                                    onChange={onChange}
+                                    className='w-full mb-2 bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2' />
+                            
+                                <label className='font-bold'>E-mail:</label>
+                                <input 
+                                    type='text' 
+                                    placeholder='E-mail' 
+                                    name='Email'
+                                    onChange={onChange}
+                                    className='w-full mb-2 bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2' />
+                            
+                                <label className='font-bold'>Whatsapp:</label>
+                                <input 
+                                    type='text' 
+                                    placeholder='Whatsapp' 
+                                    name='Whatsapp'
+                                    onChange={onChange}
+                                    className='w-full mb-2 bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2' />
 
-                    <label className='font-bold'>E-mail:</label>
-                    <input type='text' 
-                        onChange={onChange}
-                        name='Email'
-                        placeholder='E-mail'
-                        className='p-4 block shadow-lg bg-blue-100 my-2 w-full rounded' />
 
-                    <label className='font-bold'>Whatsapp:</label>
-                    <input type='text' 
-                        onChange={onChange}
-                        name='Whatsapp'
-                        placeholder='Whatsapp' 
-                        className='p-4 block shadow-lg bg-blue-100 my-2 w-full rounded' />
+                                <label className='font-bold'>Sua crítica ou sugestão:</label>
+                                <input 
+                                    type='text' 
+                                    placeholder='Crítica ou sugestão:' 
+                                    name='Sugestao'
+                                    onChange={onChange}
+                                    className='w-full mb-2 bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2' />
 
-                    <label className='font-bold'>Sua crítica ou sugestão:</label>
-                    <input type='text' 
-                        onChange={onChange}
-                        name='Sugestao'                
-                        placeholder='Sugestão'
-                        className='p-4 block shadow-lg bg-blue-100 my-2 w-full rounded' />
-                    
-                    <div className='mt-4 mx-auto text-center'>
-                        <p className='font-bold text-center'>Que nota você daria para o estabelecimento?</p>
-                        
-                        <div className='flex mx-auto py-6'>
-                        {notas.map(nota => {
-                            return(
-                                <label className='block w-1/5 text-center font-bold'>
-                                    {nota}<br />
-                                    <input type='radio' name='Nota' value={nota} onChange={onChange} />
-                                </label>
-                            )    
-                        })}
+                                <div className='mx-auto text-center mt-6'>
+                                    <label className='font-bold'>Que nota você daria para o estabelecimento?</label>
+                                </div>
+                                <div className='w-5/6 mx-auto text-center'>
+                                    <div className='flex mx-auto py-6'>
+                                        {notas.map(nota => {
+                                            return(
+                                                <label className='block w-1/5 text-center font-bold'>
+                                                    {nota}<br />
+                                                    <input type='radio' name='Nota' value={nota} onChange={onChange} />
+                                                </label>
+                                            )    
+                                        })}
+                                    </div>
+                                </div>
+                                
+                                <div className='w-5/6 mx-auto text-center'>
+                                    <button onClick={ save } 
+                                        className='w-full bg-blue-400 hover:shadow font-bold mb-4 py-3 px-6 rounded-lg shadow-lg'> 
+                                        Enviar crítica ou sugestão 
+                                    </button>
+                                </div>
+                                { !valid.status && 
+                                <div className='mx-auto text-center mt-6 bg-red-100 p-4 px-6 pb-6 bg-red-200 border-t border-b border-red-500'>
+                                    <p className='font-sm font-bold text-red-700 text-left'>Verifique</p>
+                                    {
+                                    valid.menssage.map(msg => {
+                                        return(
+                                            <p className='font-xs italic text-red-700 text-left'>* {msg}</p>
+                                        )
+                                    })}
+                                </div>
+                                }
+
+                            </div>
+
                         </div>
                     </div>
+                    
+                    /** BLOCO DE FORMULÁRIO */}
 
-                    <div className='text-center my-12'>
-                        <button onClick={ save } 
-                            className='bg-blue-400 hover:shadow font-bold py-4 px-12 rounded-lg shadow-lg'> 
-                            Enviar crítica ou sugestão 
-                        </button>
+                    {/** BLOCO DE RETORNO */
+                    sucess && 
+                    <div className='lg:w-1/2 md:w-2/3 mx-auto'>
+                        <div className='flex -m-2'>
+                            <div className='p-2 w-5/6 xl:w-3/4 lg:w-2/3 md:w-3/5 mx-auto'>
+                                <div className='mx-auto mb-2 px-4 py-4 text-center text-blue-700 bg-blue-200 border-t border-b border-blue-500'>
+                                    <p className='font-bold'>Obrigado por sugestão ou crítica!</p>
+                                </div>
+                                <div className='mx-auto mb-2 px-4 py-4 text-center text-gray-700 bg-gray-200 border-t border-b border-gray-500'>
+                                    <p className='font-bold'>Cupom:</p>
+                                    <p className='text-sm text-2xl mb-4 '>{ retorno.Cupom }</p>
+                                    <p className='font-bold'>Promoção:</p>
+                                    <p className=''>{ retorno.Promo }</p>
+                                </div>
+                                <div className='mx-auto mb-2 px-4 py-4 text-center text-gray-700 bg-gray-200 border-t border-b border-gray-500'>
+                                    <p className='italic'>Tire um print ou foto desta tela e apresente ao garçom!</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            
-            </div>
-            }
-            { sucess && 
-            <div className='text-center mt-6'>
-                <div className='mx-auto w-2/5 px-4 py-3'>
-                    
-                    <p className='mb-2 px-4 py-4 mx-auto text-center font-bold text-blue-700 bg-blue-200 w-3/5 border-t border-b border-blue-500'>
-                        <p className='font-bold'>Obrigado por sugestão ou crítica!</p>
-                    </p>
-
-                    <p className='mt-4 mb-2 p-2 mx-auto text-center font-bold text-gray-700 bg-gray-200 w-3/5 border-t border-b border-gray-500'>
-                        <p>Cupom:</p> 
-                        <p className='text-sm text-2xl'>{ retorno.Cupom }</p>
-                    </p>
-
-                    <p className='mt-4 mb-2 p-2 mx-auto text-center text-gray-700 bg-gray-200 w-3/5 border-t border-b border-gray-500'>
-                        <p className='font-bold'>Promoção: </p>
-                        <p className='text-sm'>{ retorno.Promo }</p>
-                    </p>
-                    
-                    <p className='mt-4 mb-2 p-2 mx-auto text-center text-gray-700 bg-gray-200 w-3/5 border-t border-b border-gray-500'>
-                        <p className='italic'>Tire um print ou foto desta tela e apresente ao garçom!</p>
-                    </p>
-                    
+                    /** BLOCO DE RETORNO */}
                 </div>
             </div>
-            }
-        </div>
+            {/* BLOCO INSPIRADO EM MERTJF */}
+        </React.Fragment>
     )   
 }
 
