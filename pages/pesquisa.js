@@ -22,7 +22,7 @@ const Pesquisa = () => {
       
         setForm(old => ({
             ...old,
-            [key]: value
+            [key]: value.trim()
         }))
     }
 
@@ -87,6 +87,20 @@ const Pesquisa = () => {
                     <div className='lg:w-1/2 md:w-2/3 mx-auto'>
                         <div className='flex -m-2'>
                             <div className='p-2 w-5/6 xl:w-3/4 lg:w-2/3 md:w-3/5 mx-auto'>
+                                
+                                { !valid.status && 
+                                <div className='mx-auto text-center mt-6 bg-red-100 p-4 px-6 pb-6 bg-red-200 border-t border-b border-red-500'>
+                                    <p className='font-sm font-bold text-red-700 text-left'>Verifique</p>
+                                    {
+                                    valid.menssage.map(msg => {
+                                        return(
+                                            <p className='font-xs italic text-red-700 text-left'>* {msg}</p>
+                                        )
+                                    })}
+                                </div>
+                                }
+                                
+                                
                                 <label className='font-bold'>Nome:</label>
                                 <input 
                                     type='text' 
@@ -142,17 +156,7 @@ const Pesquisa = () => {
                                         Enviar crítica ou sugestão 
                                     </button>
                                 </div>
-                                { !valid.status && 
-                                <div className='mx-auto text-center mt-6 bg-red-100 p-4 px-6 pb-6 bg-red-200 border-t border-b border-red-500'>
-                                    <p className='font-sm font-bold text-red-700 text-left'>Verifique</p>
-                                    {
-                                    valid.menssage.map(msg => {
-                                        return(
-                                            <p className='font-xs italic text-red-700 text-left'>* {msg}</p>
-                                        )
-                                    })}
-                                </div>
-                                }
+                                
 
                             </div>
 

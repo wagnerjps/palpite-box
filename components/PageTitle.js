@@ -5,6 +5,7 @@ const PageTitle = ({ title }) => {
     return(
         <Head>
             <title>PalpiteBox - { title }</title>
+            <link rel='shortcut icon' href='/w.ico' ></link>
         </Head>
     )
 }

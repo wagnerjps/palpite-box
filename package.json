@@ -13,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "autoprefixer": "^9.8.4",
+    "child_process": "^1.0.2",
     "google-spreadsheet": "^3.0.11",
     "moment": "^2.27.0",
     "next": "^9.4.4",
