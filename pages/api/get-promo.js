@@ -10,13 +10,17 @@ export default async(req, res) => {
             private_key: fromBase64(process.env.SHEET_PRIVATE_KEY)
         })
         await doc.loadInfo()
-    
+        
+        // Aqui defini a segunda planilha como ativa
         const sheetConf = doc.sheetsByIndex[2]
-        await sheetConf.loadCells('A2:B2')
-    
-        const mostraPromocaoCell = sheetConf.getCell(1, 0)
-    
-        const textoPromocaoCell = sheetConf.getCell(1, 1)
+        // Aqui o loadCells carrega o range de A0 até B3
+        await sheetConf.loadCells('A3:B3')
+        
+        // Aqui getCell pega linha, coluna
+        // Para célula Ativar Promoção use a linha 2 coluna 0 
+        const mostraPromocaoCell = sheetConf.getCell(2, 0)
+        // Para célula Mensagem da Promoção use a linha 2 coluna 1
+        const textoPromocaoCell = sheetConf.getCell(2, 1)
 
         res.end(JSON.stringify({
             showCoupon: mostraPromocaoCell.value === 'VERDADEIRO',
